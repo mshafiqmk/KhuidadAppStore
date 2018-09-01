@@ -7,6 +7,7 @@ using Storage;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace KhuidadAppStore
 {
@@ -22,7 +23,7 @@ namespace KhuidadAppStore
             log.Info("Creating a new todo list item");
 
             var requestbody = await new StreamReader(req.Body).ReadToEndAsync();
-            //var input = JsonConvert.DeserializeObject<TodoCreateModel>(requestbody);
+            var input = JsonConvert.DeserializeObject<TodoCreateModel>(requestbody);
 
             //var todo = new Todo() { TaskDescription = input.TaskDescription };
             TodoApiInMemory.Items.Add(new Todo()
@@ -30,10 +31,10 @@ namespace KhuidadAppStore
                 Id = _i++.ToString(),
                 CreateTime = DateTime.Now,
                 Iscompleted = false,
-                TaskDescription = requestbody
+                TaskDescription = input.TaskDescription
             }
             );
-            return new ObjectResult(req.Body);
+            return new ObjectResult(input.TaskDescription);
         }
     }
 }
